@@ -29,11 +29,11 @@ To describe a "full" move we also need to know which player places a marble, and
          
 A single turn is described within 5 characters:
 
-(P)layer or Color = [W,B]
-(c)olumn = [a-f]
-(r)row = [1-6]
-(Q)uadrant = [A-D]
-(d)irection of rotation [r,l]    
+	(P)layer or Color = [W,B]
+	(c)olumn = [a-f]
+	(r)row = [1-6]
+	(Q)uadrant = [A-D]
+	(d)irection of rotation [r,l]    
 
 "Wa1Ar" translates to:
 White places a marble on a1, and rotates quadrant A clockwise (right). 
