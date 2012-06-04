@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pentago.js</title>
+</head>
+<body>
+<canvas id="canvas1" ></canvas>
+
+<script src="lib/processing.js" type="text/javascript" charset="utf-8"></script>
+<script src="pentago.js" type="text/javascript" charset="utf-8"></script>
+<script>            
+
+var myGame = new Game();
+
+myGame.makeMove('Wa1Ar');
+myGame.board.print();  
+ 
+myGame.makeMove('Ba2Ar');
+myGame.board.print();   
+
+console.log(myGame);
+
+
+function sketchProc(processing) {
+	processing.setup = function(){
+	  	processing.size(900, 400);
+		processing.background(100);
+	};
+
+	// Override draw function, by default it will be called 60 times per second
+	processing.draw = function() {
+		processing.background(100);
+	};
+};
+
+var canvas = document.getElementById("canvas1");
+// attaching the sketchProc function to the canvas
+var processingInstance = new Processing(canvas, sketchProc);
+
+</script>
+
+</body>
+</html>
