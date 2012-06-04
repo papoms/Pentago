@@ -1,21 +1,23 @@
-
 //Represents a single move. use .parse(notation) to parse a String notation
-function Move(){}; 
+function Move() {
+}
 
 
 // Returns whether or not a notation is Valid
-Move.prototype.isValid = function(notation){
+Move.prototype.isValid = function (notation) {
 
 	// Notation should be 5 characters long
-	if (notation.length != 5) return false;
+	if (notation.length !== 5) {
+		return false;
+	}
 
 	// Valid Data for the different Positions
 	var validData = [
-	['W','B'],
-	['a','b','c','d','e','f'],
-	['1','2','3','4','5','6'], //using char representation for the validation only. 
-	['A','B','C','D'],
-	['r','l']                                 
+	['W', 'B'],
+	['a', 'b', 'c', 'd', 'e', 'f'],
+	['1', '2', '3', '4', '5', '6'], //using char representation for the validation only. 
+	['A', 'B', 'C', 'D'],
+	['r', 'l']                                 
 	];
 
 	// Check if notation[i] is in array of validData for this Position
@@ -23,8 +25,8 @@ Move.prototype.isValid = function(notation){
 		// if Character is not allowed return false;
 		if ( validData[i].indexOf( notation.charAt( i )) === -1 ){
 			return false;  
-		};
-	};
+		}
+	}
 
 	return true; 
 };
@@ -32,17 +34,19 @@ Move.prototype.isValid = function(notation){
 // Parse a notation String and fill object with the data
 Move.prototype.parse = function(notation){
 
-	if ( ! this.isValid( notation )) return false;
+	if ( ! this.isValid( notation )) {
+		return false;
+	}
 
-	this.notation 	= notation;
-	this.player 	= notation.charAt(0);
-	this.x 			= notation.charAt(1);
-	this.y 			= parseInt(notation.charAt(2));
-	this.block 		= notation.charAt(3);
-	this.direction 	= notation.charAt(4);    
+	this.notation = notation;
+	this.player = notation.charAt(0);
+	this.x = notation.charAt(1);
+	this.y = parseInt(notation.charAt(2), 10);
+	this.block = notation.charAt(3);
+	this.direction = notation.charAt(4);    
 
 	return true;
-} 
+}; 
 
 //Return the "serial" (0-35) Field number of a move
 Move.prototype.getFieldNumber = function(){
@@ -54,15 +58,14 @@ Move.prototype.getFieldNumber = function(){
 
 Move.prototype.print = function(){
 
-	console.log(this.notation);
 	return this.notation;
-}
+};
 
 //Represents the Board
 function Board(){   
 
 	this.reset();           
-	
+
 	//Index of Block items		
 	this.blocks = {
 		'A' : [0,1,2,6,7,8,12,13,14],
@@ -75,7 +78,7 @@ function Board(){
 		'l' : [2,7,12,-5,0,5,-12,-7,-2],
 		'r' : [12,5,-2,7,0,-7,2,-5,-12]
 	};
-};                    
+}                    
 
 
 Board.prototype.reset = function(){
@@ -84,7 +87,7 @@ Board.prototype.reset = function(){
 
 	for (var i = 0; i < 36; i++){
 		this.state[i] = 0;
-	};                    
+	}                    
 };
 
 
@@ -98,9 +101,9 @@ Board.prototype.rotateBlock = function(block, direction){
 		var posIndex = this.blocks[block][i];
 		var addIndex = this.mix[direction][i];   
 		this.state[posIndex] = oldState[ posIndex + addIndex ];
-	};
+	}
 	return true;
-}
+};
 
 
 Board.prototype.fieldIsFree = function(fieldNumber){
@@ -114,7 +117,7 @@ Board.prototype.fieldIsFree = function(fieldNumber){
 Board.prototype.setFieldColor = function (fieldNumber, color){
 
 	this.state[fieldNumber] = color; 
-}
+};
 
 
 Board.prototype.print = function(s){
@@ -123,11 +126,10 @@ Board.prototype.print = function(s){
 	var line = "";
 	for (var i = 0; i < 36; i++){
 		line += this.state[i];
-		if ((i+1) % 3 === 0) { line += ' '  };
-		if ((i+1) % 6 === 0) { line += "\n" };     
-		if ((i+1) % 18 === 0) { line += "\n" };     
-	};                                
-	console.log(line);
+		if ((i+1) % 3 === 0) { line += ' ';  }
+		if ((i+1) % 6 === 0) { line += "\n"; }     
+		if ((i+1) % 18 === 0) { line += "\n"; }     
+	}                                
 	return line;
 }; 
 
@@ -141,7 +143,9 @@ function Game(){
 
 Game.prototype.getLastMove = function(){
 
-	if (! this.moves.length ) return false;
+	if (! this.moves.length ) {
+		return false;
+	}
 
 	return this.moves[ this.moves.length - 1 ];
 };  
@@ -152,11 +156,13 @@ Game.prototype.currentPlayer = function(){
 	var lastMove = this.getLastMove();
 
 	//White starts the game
-	if (!lastMove) return 'W';
+	if (!lastMove) {
+		return 'W';
+	}
 
 	//otherwise return current Player
 	return lastMove.player === 'W' ? 'B' : 'W';
-}
+};
 
 
 //Takes either a move object or the string notation and tries to execute the move, if valid;
@@ -164,18 +170,23 @@ Game.prototype.makeMove = function(move){
 
 	// make move an object if neccessary 
 	if (typeof (move) === 'string' ){
-		moveObject = new Move();
+		var moveObject = new Move();
 		//up up and away if not parseable
-		if (!moveObject.parse(move)) return false;
+		if (!moveObject.parse(move)) {
+			return false;
+		}
 		move = moveObject;
-		delete moveObject;
 	}   
 
 	//Check if its the players turn
-	if (move.player != this.currentPlayer()) return false;
+	if (move.player !== this.currentPlayer()) {
+		return false;
+	}
 
 	//Check if the target Field is free
-	if (! this.board.fieldIsFree( move.getFieldNumber() )) return false; 
+	if (! this.board.fieldIsFree( move.getFieldNumber() )) {
+		return false; 
+	}
 
 	// Put the Marble
 	this.board.setFieldColor( move.getFieldNumber(), move.player); 
@@ -187,4 +198,5 @@ Game.prototype.makeMove = function(move){
 
 	this.moves.push(move);
 
-}
+};
+
