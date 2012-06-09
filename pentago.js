@@ -15,7 +15,7 @@ Move.prototype.isValid = function (notation) {
 	var validData = [
 	['W', 'B'],
 	['a', 'b', 'c', 'd', 'e', 'f'],
-	['1', '2', '3', '4', '5', '6'], //using char representation for the validation only. 
+	['1', '2', '3', '4', '5', '6'], //using String representation for the validation. This will be parsed as Integer later 
 	['A', 'B', 'C', 'D'],
 	['r', 'l']                                 
 	];
@@ -57,7 +57,6 @@ Move.prototype.getFieldNumber = function(){
 
 
 Move.prototype.print = function(){
-
 	return this.notation;
 };
 
@@ -66,14 +65,18 @@ function Board(){
 
 	this.reset();           
 
-	//Index of Block items		
+	//Set size of the Board
+	this.size = 6;
+
+	// Index of Blocks or Quadrants and their fields
 	this.blocks = {
 		'A' : [0,1,2,6,7,8,12,13,14],
 		'B' : [3,4,5,9,10,11,15,16,17],
 		'C' : [18,19,20,24,25,26,30,31,32],
 		'D' : [21,22,23,27,28,29,33,34,35]
 	};
-	//rotation Left and right
+	
+	// Index Offsets for rotating left and right
 	this.mix = {
 		'l' : [2,7,12,-5,0,5,-12,-7,-2],
 		'r' : [12,5,-2,7,0,-7,2,-5,-12]
@@ -122,16 +125,59 @@ Board.prototype.setFieldColor = function (fieldNumber, color){
 
 Board.prototype.print = function(s){
 
-	//0 = free => !
+	// 0 = free => !
 	var line = "";
-	for (var i = 0; i < 36; i++){
-		line += this.state[i];
+
+	// print column names
+	for (var i = 0; i < 6; i++){
+		line += String.fromCharCode(97+i) ; 
 		if ((i+1) % 3 === 0) { line += ' ';  }
-		if ((i+1) % 6 === 0) { line += "\n"; }     
+	}
+	line += "\n";
+
+	// print Field States
+	for (var i = 0; i < 36; i++){
+
+		line += this.state[i];
+
+		// Add Separator between Quadrants
+		if ((i+1) % 3 === 0) { line += ' ';  }
+		// Next Row => Add New Line
+		if ((i+1) % 6 === 0) { line += "\n"; }
+		// Add Extra New Line between Quadrants
 		if ((i+1) % 18 === 0) { line += "\n"; }     
 	}                                
+
 	return line;
 }; 
+
+Board.prototype.getLines = function(){
+
+	var horizontal, vertical, diagonal = [];
+	
+	// Get all Horizontal & vertical Lines
+	for (var i = 0; i < this.size; i++){
+ 		
+ 		// Add Horizontal Lines 
+ 		horizontal.push( this.state.slice( i * this.size, i * this.size + this.size));
+		
+		// Add vertical Lines;
+		vertical[i] = [];
+		for (var j = 0; j < this.size; j++) {
+ 			vertical[i][j] = this.state[ j * this.size + i];
+ 		};
+
+ 		// Add Diagonal Lines
+ 		
+
+ 		
+	}
+	//Get all Vertical Lines
+	//Get all Diagonals
+	console.log(vertical);
+	console.log(horizontal);
+	return vertical;
+}
 
 
 // Represents the Game and its state
